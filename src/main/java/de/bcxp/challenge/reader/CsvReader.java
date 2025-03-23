@@ -1,8 +1,12 @@
-package de.bcxp.challenge.utils;
+package de.bcxp.challenge.reader;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import de.bcxp.challenge.exceptions.CsvException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,7 +14,11 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
 
-public class CsvReaderUtil {
+public class CsvReader {
+
+    @Getter
+    @Setter
+    private char separator = ',';
 
     /**
      * Reads a CSV file and maps it to a list of objects of the given class.
@@ -20,11 +28,12 @@ public class CsvReaderUtil {
      * @param <T> The type of the class
      * @throws CsvException If an error occurs while reading the CSV file
      */
-    public static <T> List<T> readCsvFile(final Reader reader, final Class<T> clazz) throws CsvException {
+    public <T> List<T> readCsvFile(final Reader reader, final Class<T> clazz) throws CsvException {
         try {
             CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader)
                     .withType(clazz)
                     .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(this.getSeparator())
                     .build();
 
             return csvToBean.parse();
@@ -41,7 +50,7 @@ public class CsvReaderUtil {
      * @param <T> The type of the class
      * @throws CsvException If an error occurs while reading the CSV file
      */
-    public static <T> List<T> readCsvFile(final String path, final Class<T> clazz) throws CsvException {
+    public <T> List<T> readCsvFile(final String path, final Class<T> clazz) throws CsvException {
         try {
             Reader reader = new BufferedReader(new FileReader(path));
 

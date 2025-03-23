@@ -1,4 +1,4 @@
-package de.bcxp.challenge.utils;
+package de.bcxp.challenge.reader;
 
 import de.bcxp.challenge.dummyResources.DummyCSV1;
 import de.bcxp.challenge.exceptions.CsvException;
@@ -18,8 +18,9 @@ public class CsvReaderUtilTest {
     @Test
     public void testReadCsv() throws CsvException, IOException {
         Reader reader = new BufferedReader(new FileReader("src/test/resources/dummyCSV1.csv"));
+        CsvReader csvReader = new CsvReader();
 
-        List<DummyCSV1> dummyCSV1List = CsvReaderUtil.readCsvFile(reader, DummyCSV1.class);
+        List<DummyCSV1> dummyCSV1List = csvReader.readCsvFile(reader, DummyCSV1.class);
 
         assertEquals(3, dummyCSV1List.size());
 
@@ -40,15 +41,16 @@ public class CsvReaderUtilTest {
     @Test
     public void testReadInvalidCsv() throws IOException {
         Reader reader = new BufferedReader(new FileReader("src/test/resources/dummyCSV2.csv"));
+        CsvReader csvReader = new CsvReader();
 
         assertThrows(CsvException.class, () -> {
-            CsvReaderUtil.readCsvFile(reader, DummyCSV1.class);
+            csvReader.readCsvFile(reader, DummyCSV1.class);
         });
 
         Reader reader2 = new BufferedReader(new FileReader("src/test/resources/dummyCSV3.csv"));
 
         assertThrows(CsvException.class, () -> {
-            CsvReaderUtil.readCsvFile(reader2, DummyCSV1.class);
+            csvReader.readCsvFile(reader2, DummyCSV1.class);
         });
     }
 

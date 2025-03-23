@@ -1,7 +1,9 @@
 package de.bcxp.challenge;
 
+import de.bcxp.challenge.countries.service.CountryService;
+import de.bcxp.challenge.countries.view.CountryRawView;
 import de.bcxp.challenge.exceptions.CsvException;
-import de.bcxp.challenge.utils.CsvReaderUtil;
+import de.bcxp.challenge.reader.CsvReader;
 import de.bcxp.challenge.weather.service.WeatherService;
 import de.bcxp.challenge.weather.view.WeatherRawView;
 
@@ -18,9 +20,10 @@ public final class App {
      * @param args The CLI arguments passed
      */
     public static void main(String... args) throws CsvException {
+        CsvReader csvReader = new CsvReader();
 
         // Weather task
-        List<WeatherRawView> weatherData = CsvReaderUtil.readCsvFile("src/main/resources/de/bcxp/challenge/weather.csv", WeatherRawView.class);
+        List<WeatherRawView> weatherData = csvReader.readCsvFile("src/main/resources/de/bcxp/challenge/weather.csv", WeatherRawView.class);
         WeatherService weatherService = new WeatherService(weatherData);
 
         Integer dayWithSmallestTempSpread = weatherService.getDayWithSmallestTempSpread().getDay();
@@ -28,7 +31,11 @@ public final class App {
 
 
         // density task
-        String countryWithHighestPopulationDensity = "Some country"; // Your population density analysis function call …
+        csvReader.setSeparator(';');
+        List<CountryRawView> countryData = csvReader.readCsvFile("src/main/resources/de/bcxp/challenge/countries.csv", CountryRawView.class);
+        CountryService countryService = new CountryService(countryData);
+
+        String countryWithHighestPopulationDensity = countryService.getCountryWithHighestPopulationDensity().getName();
         System.out.printf("Country with highest population density: %s%n", countryWithHighestPopulationDensity);
     }
 }
