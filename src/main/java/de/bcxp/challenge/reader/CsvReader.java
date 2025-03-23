@@ -2,10 +2,8 @@ package de.bcxp.challenge.reader;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import de.bcxp.challenge.exceptions.CsvException;
-import lombok.AllArgsConstructor;
+import de.bcxp.challenge.exceptions.ReadException;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.BufferedReader;
@@ -14,7 +12,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
 
-public class CsvReader {
+public class CsvReader implements IReader {
 
     @Getter
     @Setter
@@ -26,9 +24,9 @@ public class CsvReader {
      * @param clazz The class to map the CSV file to
      * @return A list of objects of the given class
      * @param <T> The type of the class
-     * @throws CsvException If an error occurs while reading the CSV file
+     * @throws ReadException If an error occurs while reading the CSV file
      */
-    public <T> List<T> readCsvFile(final Reader reader, final Class<T> clazz) throws CsvException {
+    public <T> List<T> readFile(final Reader reader, final Class<T> clazz) {
         try {
             CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader)
                     .withType(clazz)
@@ -38,7 +36,7 @@ public class CsvReader {
 
             return csvToBean.parse();
         } catch (Exception e) {
-            throw new CsvException("Error reading CSV file", e);
+            throw new ReadException("Error reading CSV file", e);
         }
     }
 
@@ -48,15 +46,15 @@ public class CsvReader {
      * @param clazz The class to map the CSV file to
      * @return A list of objects of the given class
      * @param <T> The type of the class
-     * @throws CsvException If an error occurs while reading the CSV file
+     * @throws ReadException If an error occurs while reading the CSV file
      */
-    public <T> List<T> readCsvFile(final String path, final Class<T> clazz) throws CsvException {
+    public <T> List<T> readFile(final String path, final Class<T> clazz) {
         try {
             Reader reader = new BufferedReader(new FileReader(path));
 
-            return readCsvFile(reader, clazz);
+            return readFile(reader, clazz);
         } catch (FileNotFoundException e) {
-            throw new CsvException("File not found", e);
+            throw new ReadException("File not found", e);
         }
     }
 

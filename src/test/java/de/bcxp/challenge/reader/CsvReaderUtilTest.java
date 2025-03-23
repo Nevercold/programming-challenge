@@ -1,7 +1,7 @@
 package de.bcxp.challenge.reader;
 
 import de.bcxp.challenge.dummyResources.DummyCSV1;
-import de.bcxp.challenge.exceptions.CsvException;
+import de.bcxp.challenge.exceptions.ReadException;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CsvReaderUtilTest {
 
     @Test
-    public void testReadCsv() throws CsvException, IOException {
+    public void testReadCsv() throws ReadException, IOException {
         Reader reader = new BufferedReader(new FileReader("src/test/resources/dummyCSV1.csv"));
         CsvReader csvReader = new CsvReader();
 
-        List<DummyCSV1> dummyCSV1List = csvReader.readCsvFile(reader, DummyCSV1.class);
+        List<DummyCSV1> dummyCSV1List = csvReader.readFile(reader, DummyCSV1.class);
 
         assertEquals(3, dummyCSV1List.size());
 
@@ -43,14 +43,14 @@ public class CsvReaderUtilTest {
         Reader reader = new BufferedReader(new FileReader("src/test/resources/dummyCSV2.csv"));
         CsvReader csvReader = new CsvReader();
 
-        assertThrows(CsvException.class, () -> {
-            csvReader.readCsvFile(reader, DummyCSV1.class);
+        assertThrows(ReadException.class, () -> {
+            csvReader.readFile(reader, DummyCSV1.class);
         });
 
         Reader reader2 = new BufferedReader(new FileReader("src/test/resources/dummyCSV3.csv"));
 
-        assertThrows(CsvException.class, () -> {
-            csvReader.readCsvFile(reader2, DummyCSV1.class);
+        assertThrows(ReadException.class, () -> {
+            csvReader.readFile(reader2, DummyCSV1.class);
         });
     }
 
